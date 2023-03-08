@@ -119,6 +119,9 @@ venv.bak/
 
 # PyCharm project settings
 .idea
+compatibility
+/service/static
+/service/media
 
 # mkdocs documentation
 /site

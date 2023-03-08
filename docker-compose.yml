@@ -1,0 +1,73 @@
+version: "3.9"
+
+services:
+  web:
+    container_name: web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - static_volume:/service/static
+      - media_volume:/service/media
+    env_file:
+      - service/.env
+    ports:
+      - 8000:8000
+    depends_on:
+      - mysql
+    networks:
+      - service
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    restart: always
+    ports:
+      - 80:80
+    networks:
+      - service
+    depends_on:
+      - web
+    volumes:
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - static_volume:/var/www/html/static
+      - media_volume:/var/www/html/media
+  mysql:
+    container_name: mysql
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+      - mysql_volume:/var/lib/mysql
+    environment:
+      MYSQL_USER: developer
+      MYSQL_PASSWORD: x29XeOmXQgdef)KTOnk>aSFO.d}-v!
+      MYSQL_DATABASE: store
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
+    networks:
+      - service
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin:latest
+    restart: always
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - 8080:80
+    depends_on:
+      - mysql
+    networks:
+      - service
+volumes:
+  static_volume:
+  media_volume:
+  mysql_volume:
+networks:
+  service:
+    driver: bridge
