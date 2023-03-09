@@ -8,6 +8,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     volumes:
+      - ./service:/service
       - static_volume:/service/static
       - media_volume:/service/media
     env_file:
