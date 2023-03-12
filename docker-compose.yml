@@ -69,6 +69,7 @@ volumes:
   static_volume:
   media_volume:
   mysql_volume:
+
 networks:
   service:
     driver: bridge
